@@ -315,15 +315,34 @@ h1,h2,h3,h4,h5,h6{font-weight:600;line-height:1.3}
   background:#ffd87a;
 }
 
-/* Sello/monograma S&D — solo el elemento flotando (sin disco) */
+/* Sello/monograma S&D — elemento flotante con halo blanco difuminado */
 .h-seal{
   position:relative;z-index:5;
-  width:220px;height:auto;
+  width:220px;height:220px;
   margin:34px auto 14px;
   display:flex;align-items:center;justify-content:center;
 }
+/* Halo blanco difuminado MUY suave — sin bordes duros */
+.h-seal::before{
+  content:'';position:absolute;
+  inset:-8%;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(255,255,255,.62) 0%,
+    rgba(255,250,240,.45) 28%,
+    rgba(255,245,225,.22) 52%,
+    rgba(255,240,210,.08) 72%,
+    transparent 86%);
+  filter:blur(12px);
+  pointer-events:none;
+  z-index:0;
+  animation:hSealHalo 5s ease-in-out infinite;
+}
+@keyframes hSealHalo{
+  0%,100%{transform:scale(1);opacity:.92}
+  50%   {transform:scale(1.05);opacity:1}
+}
 .h-seal-disc{
-  position:relative;
+  position:relative;z-index:1;
   width:220px;background:none;border:none;box-shadow:none;
   display:flex;align-items:center;justify-content:center;
   overflow:visible;
