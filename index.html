@@ -205,22 +205,30 @@ h1,h2,h3,h4,h5,h6{font-weight:600;line-height:1.3}
 
 .btn{
   display:flex;align-items:center;justify-content:center;gap:9px;
-  width:100%;padding:15px 16px;
-  border:1px solid var(--peach);border-radius:7px;
+  width:100%;padding:16px 18px;
+  border:1.5px solid var(--peach);border-radius:8px;
   background:transparent;color:var(--peach);
-  font-family:'Lato',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  font-family:'Lato',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
   text-decoration:none;cursor:pointer;-webkit-appearance:none;
   position:relative;overflow:hidden;
   transition:background .25s, transform .2s var(--spring);
+  opacity:1!important;
 }
-.btn:active{transform:scale(.96);background:rgba(144,158,141,.08)}
+.btn:active{transform:scale(.96);background:rgba(166,123,1,.08)}
 .btn+.btn{margin-top:10px}
 .btn-olive{
-  background:var(--peach);color:var(--ink);font-weight:400;
-  box-shadow:0 4px 22px rgba(144,158,141,.25);
+  background:linear-gradient(135deg,var(--peach) 0%,#8a6500 100%);
+  color:#fff;font-weight:700;
+  border-color:var(--peach-accent);
+  box-shadow:
+    0 6px 22px rgba(86,61,0,.32),
+    inset 0 1px 0 rgba(255,255,255,.18);
   transition:all .3s var(--spring);
+  text-shadow:0 1px 2px rgba(0,0,0,.25);
 }
-.btn-olive:active{background:var(--peach-lt);transform:scale(.96)}
+.btn-olive:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(86,61,0,.42),inset 0 1px 0 rgba(255,255,255,.22)}
+.btn-olive:active{background:linear-gradient(135deg,#8a6500 0%,var(--peach) 100%);transform:scale(.96)}
 
 /* ── HERO · DISEÑO EDITORIAL S&D — FOTO DE FONDO ─────────
    Layout: foto full-bg con overlay tonal +
@@ -307,46 +315,24 @@ h1,h2,h3,h4,h5,h6{font-weight:600;line-height:1.3}
   background:#ffd87a;
 }
 
-/* Sello/monograma S&D — circular elegante con doble anillo */
+/* Sello/monograma S&D — solo el elemento flotando (sin disco) */
 .h-seal{
   position:relative;z-index:5;
-  width:170px;height:170px;
-  margin:28px auto 22px;
+  width:220px;height:auto;
+  margin:34px auto 14px;
   display:flex;align-items:center;justify-content:center;
 }
-/* Anillo exterior punteado */
-.h-seal::before{
-  content:'';position:absolute;inset:-8px;border-radius:50%;
-  border:1px dashed rgba(255,228,180,.7);
-  animation:hSealRing 32s linear infinite;
-}
-/* Resplandor */
-.h-seal::after{
-  content:'';position:absolute;inset:-22px;border-radius:50%;
-  background:radial-gradient(circle, rgba(255,228,180,.30) 0%, rgba(244,164,192,.12) 45%, transparent 70%);
-  animation:hSealGlow 4.2s ease-in-out infinite;
-}
-@keyframes hSealRing{to{transform:rotate(360deg)}}
-@keyframes hSealGlow{
-  0%,100%{transform:scale(1);opacity:.7}
-  50%{transform:scale(1.12);opacity:1}
-}
-/* Disco interior translúcido cremoso */
 .h-seal-disc{
   position:relative;
-  width:170px;height:170px;border-radius:50%;
-  background:radial-gradient(circle at 35% 28%, rgba(255,255,255,.95) 0%, rgba(255,244,228,.92) 50%, rgba(255,228,180,.85) 100%);
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.95),
-    inset 0 0 0 3px rgba(166,123,1,.45),
-    0 14px 40px -10px rgba(0,0,0,.55),
-    0 0 0 1px rgba(255,228,180,.4);
+  width:220px;background:none;border:none;box-shadow:none;
   display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
+  overflow:visible;
 }
 .h-seal-disc img{
-  width:140px;height:auto;
-  filter:drop-shadow(0 3px 10px rgba(86,61,0,.28));
+  width:100%;height:auto;
+  filter:
+    drop-shadow(0 3px 12px rgba(0,0,0,.55))
+    drop-shadow(0 0 18px rgba(255,228,180,.45));
 }
 
 /* Línea ornamental */
@@ -699,40 +685,55 @@ h1,h2,h3,h4,h5,h6{font-weight:600;line-height:1.3}
   pointer-events:none;z-index:0;
   overflow:visible;
 }
+.tl-svg{overflow:visible!important}
 .tl-svg-bg{
-  stroke:rgba(166,123,1,.18);
-  stroke-width:1;fill:none;
+  stroke:rgba(166,123,1,.22);
+  stroke-width:1.2;fill:none;
   stroke-dasharray:2 5;
 }
-/* Línea principal con doble drop-shadow para resplandor dorado */
+/* Línea principal — grosor mayor en mobile + glow inline (stroke filter) */
 .tl-svg-path{
   stroke:var(--peach);
-  stroke-width:2.2;
+  stroke-width:3;
   stroke-linecap:round;
   fill:none;
   filter:
-    drop-shadow(0 0 4px rgba(212,165,1,.85))
-    drop-shadow(0 0 12px rgba(212,165,1,.55))
-    drop-shadow(0 0 24px rgba(244,164,192,.35));
-  animation:tlGlowPulse 3.6s ease-in-out infinite;
+    drop-shadow(0 0 5px rgba(212,165,1,1))
+    drop-shadow(0 0 14px rgba(212,165,1,.85))
+    drop-shadow(0 0 28px rgba(244,164,192,.6));
+  animation:tlGlowPulse 3.2s ease-in-out infinite;
 }
 @keyframes tlGlowPulse{
-  0%,100%{filter:drop-shadow(0 0 4px rgba(212,165,1,.7)) drop-shadow(0 0 10px rgba(212,165,1,.4)) drop-shadow(0 0 20px rgba(244,164,192,.25))}
-  50%   {filter:drop-shadow(0 0 6px rgba(212,165,1,.95)) drop-shadow(0 0 16px rgba(212,165,1,.7)) drop-shadow(0 0 32px rgba(244,164,192,.5))}
+  0%,100%{filter:drop-shadow(0 0 5px rgba(212,165,1,.85)) drop-shadow(0 0 12px rgba(212,165,1,.6)) drop-shadow(0 0 24px rgba(244,164,192,.45))}
+  50%   {filter:drop-shadow(0 0 8px rgba(212,165,1,1))    drop-shadow(0 0 20px rgba(212,165,1,.9)) drop-shadow(0 0 38px rgba(244,164,192,.75))}
 }
-/* Capa adicional de halo desenfocado bajo la línea */
+/* Capa de aura más visible en mobile */
 .tl-glow-layer{
-  stroke:var(--pink-mid);
-  stroke-width:6;
+  stroke:#f4a4c0;
+  stroke-width:10;
   stroke-linecap:round;
   fill:none;
-  opacity:.4;
-  filter:blur(6px);
-  animation:tlGlowAura 4.2s ease-in-out infinite alternate;
+  opacity:.55;
+  filter:blur(8px);
+  animation:tlGlowAura 4s ease-in-out infinite alternate;
 }
 @keyframes tlGlowAura{
-  from{opacity:.25;stroke-width:4}
-  to  {opacity:.55;stroke-width:9}
+  from{opacity:.4;stroke-width:7}
+  to  {opacity:.7;stroke-width:14}
+}
+/* Halo extra inline detrás del path principal con stroke + blur — funciona donde drop-shadow falla en Safari mobile */
+.tl-svg-halo{
+  stroke:rgba(255,200,80,.65);
+  stroke-width:7;
+  stroke-linecap:round;
+  fill:none;
+  opacity:.85;
+  filter:blur(3.5px);
+  animation:tlHaloPulse 3.2s ease-in-out infinite;
+}
+@keyframes tlHaloPulse{
+  0%,100%{opacity:.65;stroke-width:6}
+  50%   {opacity:1;stroke-width:10}
 }
 
 /* Fila con zig-zag: lado izq y der — texto nunca cruza la línea central */
@@ -1437,30 +1438,34 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
 .fam-ttl{
   font-family:'Cormorant Garamond',serif;
   font-size:13px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;
-  color:var(--peach);text-align:center;margin:0 0 14px;
+  color:var(--peach);text-align:center;
+  margin:0 0 6px; /* el título se pega más a su card */
 }
 .fam-nms{
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(17px,4.2vw,21px);color:var(--cream);
   line-height:1.65;font-weight:500;margin:0;
 }
+/* Ampersand con espaciado SIMÉTRICO arriba y abajo */
 .fam-sep{
   display:block;font-family:'Great Vibes',cursive;
-  font-size:30px;color:var(--peach);line-height:.9;margin:4px 0;
+  font-size:32px;color:var(--peach);
+  line-height:1;
+  margin:10px 0; /* mismo margen arriba que abajo */
 }
-.sdiv{height:26px}
+.sdiv{height:32px}
 
-/* Iconos circulares para padrinos */
+/* Iconos circulares para padrinos — imágenes reales transparentes */
 .fam-icon{
   display:flex;align-items:center;justify-content:center;
-  width:64px;height:64px;
-  margin:-58px auto 14px;
+  width:78px;height:78px;
+  margin:-46px auto 12px;
   background:radial-gradient(circle at 35% 28%, #fff 0%, #fff4e3 60%, #f9d3e0 100%);
   border:1.5px solid rgba(166,123,1,.55);
   border-radius:50%;
   box-shadow:
     inset 0 0 0 3px rgba(255,255,255,.9),
-    0 6px 16px -4px rgba(86,61,0,.32);
+    0 8px 22px -6px rgba(86,61,0,.36);
   position:relative;
 }
 .fam-icon::before{
@@ -1470,8 +1475,15 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
   pointer-events:none;
 }
 @keyframes famIconRing{to{transform:rotate(360deg)}}
-.fam-icon svg{width:32px;height:32px;color:var(--peach-accent)}
-.fam-card.has-icon{padding-top:38px;margin-top:34px}
+.fam-icon img{
+  width:58px;height:58px;object-fit:contain;
+  filter:drop-shadow(0 2px 4px rgba(86,61,0,.18));
+}
+/* Velación es line-art casi negro — refuerzo de contraste */
+.fam-icon img.fam-icon-velacion{
+  filter:drop-shadow(0 2px 4px rgba(86,61,0,.22));
+}
+.fam-card.has-icon{padding-top:38px;margin-top:50px}
 .gf-card{
   transition:transform .4s cubic-bezier(.34,1.56,.64,1),
              box-shadow .4s ease,border-color .3s;
@@ -1831,9 +1843,7 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
     <path d="M6 8 Q12 14 14 14"/>
   </svg>
 
-  <span class="h-tag">Save the Date</span>
-
-  <!-- Sello/monograma S&D circular con doble anillo dorado -->
+  <!-- Sello/monograma S&D — solo el elemento flotante -->
   <div class="h-seal" aria-hidden="true">
     <div class="h-seal-disc">
       <img src="logo-sd.webp" alt="Monograma Stephanie y David">
@@ -1893,12 +1903,8 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
 
 <!-- ═══════════════ 2. CUENTA REGRESIVA · BOUTIQUE ══ -->
 <section id="countdown">
-  <span class="lbl">El tiempo corre · el amor también</span>
   <h2 class="ttl">Cuenta Regresiva</h2>
   <div class="gline"></div>
-  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--cream);text-align:center;margin:4px auto 4px;max-width:330px;line-height:1.55">
-    Cada día nos acerca un paso más a decir <strong style="color:var(--peach);font-weight:600">"sí, para siempre"</strong>.
-  </p>
 
   <div class="cd-ring-grid">
     <div class="cd-ring-item" id="cd-item-d">
@@ -2051,6 +2057,7 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
     <svg class="tl-svg" id="tlSvg" preserveAspectRatio="none" aria-hidden="true">
       <path class="tl-svg-bg"     id="tlPathBg"/>
       <path class="tl-glow-layer" id="tlPathGlow"/>
+      <path class="tl-svg-halo"   id="tlPathHalo"/>
       <path class="tl-svg-path"   id="tlPath"/>
     </svg>
 
@@ -2257,12 +2264,12 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
   <div class="gline"></div>
 
   <p class="fam-ttl">Padres del Novio</p>
-  <div class="fam-card"><p class="fam-nms">Miguel Ángel Perea Rivera<br><span class="fam-sep">&amp;</span><br>Amelia Angélica Garduño Velázquez</p></div>
+  <div class="fam-card"><p class="fam-nms">Miguel Ángel Perea Rivera<span class="fam-sep">&amp;</span>Amelia Angélica Garduño Velázquez</p></div>
 
   <div class="sdiv"></div>
 
   <p class="fam-ttl">Padres de la Novia</p>
-  <div class="fam-card"><p class="fam-nms">José Lucas Cordero Canales<br><span class="fam-sep">&amp;</span><br>Juanita Comparán Rocha</p></div>
+  <div class="fam-card"><p class="fam-nms">José Lucas Cordero Canales<span class="fam-sep">&amp;</span>Juanita Comparán Rocha</p></div>
 
   <div class="sdiv"></div>
 
@@ -2272,17 +2279,9 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
   <p class="fam-ttl">Padrinos de Lazo</p>
   <div class="fam-card has-icon">
     <div class="fam-icon" aria-hidden="true">
-      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Lazo">
-        <ellipse cx="13" cy="20" rx="8" ry="6.5" transform="rotate(-22 13 20)"/>
-        <ellipse cx="27" cy="20" rx="8" ry="6.5" transform="rotate(22 27 20)"/>
-        <circle cx="20" cy="20" r="2.6" fill="currentColor" stroke="none"/>
-        <path d="M18 22 L14 32"/>
-        <path d="M22 22 L26 32"/>
-        <path d="M14 32 L12 30 M14 32 L17 31"/>
-        <path d="M26 32 L28 30 M26 32 L23 31"/>
-      </svg>
+      <img src="icon-lazo.webp" alt="Lazo" loading="lazy">
     </div>
-    <p class="fam-nms">Michel Perea<br><span class="fam-sep">&amp;</span><br>Alberto Orozco</p>
+    <p class="fam-nms">Michel Perea<span class="fam-sep">&amp;</span>Alberto Orozco</p>
   </div>
 
   <div class="sdiv"></div>
@@ -2290,18 +2289,9 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
   <p class="fam-ttl">Padrinos de Anillos</p>
   <div class="fam-card has-icon">
     <div class="fam-icon" aria-hidden="true">
-      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Anillos">
-        <circle cx="15" cy="22" r="8"/>
-        <circle cx="25" cy="22" r="8"/>
-        <path d="M11 12 L15 9 L19 12" stroke-width="1.3"/>
-        <path d="M15 9 L15 14" stroke-width="1.3"/>
-        <circle cx="15" cy="7" r="1.4" fill="currentColor" stroke="none"/>
-        <circle cx="25" cy="7" r="1.4" fill="currentColor" stroke="none"/>
-        <path d="M21 12 L25 9 L29 12" stroke-width="1.3"/>
-        <path d="M25 9 L25 14" stroke-width="1.3"/>
-      </svg>
+      <img src="icon-anillos.webp" alt="Anillos" loading="lazy">
     </div>
-    <p class="fam-nms">Jaqueline Garduño<br><span class="fam-sep">&amp;</span><br>Sinaí Marín</p>
+    <p class="fam-nms">Jaqueline Garduño<span class="fam-sep">&amp;</span>Sinaí Marín</p>
   </div>
 
   <div class="sdiv"></div>
@@ -2309,17 +2299,9 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
   <p class="fam-ttl">Padrinos de Arras</p>
   <div class="fam-card has-icon">
     <div class="fam-icon" aria-hidden="true">
-      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Arras">
-        <circle cx="20" cy="20" r="11"/>
-        <circle cx="20" cy="20" r="7.5"/>
-        <text x="20" y="24" font-family="Cormorant Garamond, serif" font-size="10" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">13</text>
-        <circle cx="20" cy="6" r="1.5" fill="currentColor" stroke="none"/>
-        <circle cx="6" cy="20" r="1.5" fill="currentColor" stroke="none"/>
-        <circle cx="34" cy="20" r="1.5" fill="currentColor" stroke="none"/>
-        <circle cx="20" cy="34" r="1.5" fill="currentColor" stroke="none"/>
-      </svg>
+      <img src="icon-arras.webp" alt="Arras" loading="lazy">
     </div>
-    <p class="fam-nms">Joseline Cordero<br><span class="fam-sep">&amp;</span><br>Guillermo Mercado</p>
+    <p class="fam-nms">Joseline Cordero<span class="fam-sep">&amp;</span>Guillermo Mercado</p>
   </div>
 
   <div class="sdiv"></div>
@@ -2327,15 +2309,9 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
   <p class="fam-ttl">Padrinos de Velación</p>
   <div class="fam-card has-icon">
     <div class="fam-icon" aria-hidden="true">
-      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Velación">
-        <rect x="13" y="17" width="5" height="16" rx="1"/>
-        <rect x="22" y="17" width="5" height="16" rx="1"/>
-        <path d="M15.5 17 C 15.5 13, 14 12, 15.5 8 C 17 12, 15.5 13, 15.5 17 Z" fill="currentColor" stroke="none" opacity=".85"/>
-        <path d="M24.5 17 C 24.5 13, 23 12, 24.5 8 C 26 12, 24.5 13, 24.5 17 Z" fill="currentColor" stroke="none" opacity=".85"/>
-        <path d="M10 20 Q20 12 30 20" stroke-width="1.2" opacity=".7"/>
-      </svg>
+      <img src="icon-velacion.webp" alt="Velación" class="fam-icon-velacion" loading="lazy">
     </div>
-    <p class="fam-nms">Irma González<br><span class="fam-sep">&amp;</span><br>Sergio Yeverino</p>
+    <p class="fam-nms">Irma González<span class="fam-sep">&amp;</span>Sergio Yeverino</p>
   </div>
 </section>
 
@@ -2683,6 +2659,7 @@ function buildTimelinePath() {
   const path = document.getElementById('tlPath');
   const bg   = document.getElementById('tlPathBg');
   const glow = document.getElementById('tlPathGlow');
+  const halo = document.getElementById('tlPathHalo');
   if (!wrap || !svg || !path) return;
   const rows = [...wrap.querySelectorAll('.tl-row')];
   if (!rows.length) return;
@@ -2715,6 +2692,7 @@ function buildTimelinePath() {
     path.setAttribute('d', d);
     if (bg)   bg.setAttribute('d', d);
     if (glow) glow.setAttribute('d', d);
+    if (halo) halo.setAttribute('d', d);
 
     const len = path.getTotalLength();
     path.style.strokeDasharray  = len;
@@ -2770,11 +2748,12 @@ function scrollAnims() {
     }
   });
 
-  // Calendar button
+  // Calendar button — immediateRender:false evita que quede oculto si scrollTrigger no se dispara
   gsap.from(['#calendar .cal-sub', '#calBtn'], {
     opacity: 0, y: 18, scale: .96, duration: .65, stagger: .14,
     ease: 'back.out(1.3)',
-    scrollTrigger: { trigger: '#calendar', start: 'top 84%', once: true }
+    immediateRender: false,
+    scrollTrigger: { trigger: '#calendar', start: 'top 90%', once: true }
   });
 
   // Timeline — camino en S que se dibuja al hacer scroll
