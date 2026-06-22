@@ -236,25 +236,29 @@ h1,h2,h3,h4,h5,h6{font-weight:600;line-height:1.3}
 ─────────────────────────────────────────────────────────── */
 #hero{
   min-height:100svh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  align-items:center;justify-content:flex-start;
   position:relative;overflow:hidden;
-  padding:32px 22px 70px;
+  padding:32px 22px 90px;
   isolation:isolate;
 }
+/* Nombres empujados hacia abajo del hero */
+#hero .h-names-stack{margin-top:auto}
+#hero .h-orn-line{margin-top:auto;margin-bottom:14px}
 /* Foto de fondo */
 .h-bg{
   position:absolute;inset:0;z-index:0;overflow:hidden;
 }
 .h-bg img{
-  width:100%;height:100%;object-fit:cover;object-position:center 30%;
+  width:100%;height:100%;object-fit:cover;object-position:center 22%;
   display:block;
   filter:saturate(1.05) contrast(1.04) brightness(.88);
-  transform:scale(1.05);
+  transform:scale(1.3);
+  transform-origin:center 40%;
   animation:hBgKenburns 22s ease-in-out infinite alternate;
 }
 @keyframes hBgKenburns{
-  from{transform:scale(1.05) translateY(0)}
-  to  {transform:scale(1.12) translateY(-1.5%)}
+  from{transform:scale(1.3) translateY(0)}
+  to  {transform:scale(1.38) translateY(-1%)}
 }
 /* Overlay tonal — gradiente vertical para legibilidad */
 .h-ov{
@@ -322,24 +326,24 @@ h1,h2,h3,h4,h5,h6{font-weight:600;line-height:1.3}
   margin:34px auto 14px;
   display:flex;align-items:center;justify-content:center;
 }
-/* Halo blanco difuminado MUY suave — sin bordes duros */
+/* Halo blanco difuminado más intenso para que destaque el logo */
 .h-seal::before{
   content:'';position:absolute;
-  inset:-8%;
+  inset:-12%;
   background:radial-gradient(circle at 50% 50%,
-    rgba(255,255,255,.62) 0%,
-    rgba(255,250,240,.45) 28%,
-    rgba(255,245,225,.22) 52%,
-    rgba(255,240,210,.08) 72%,
-    transparent 86%);
-  filter:blur(12px);
+    rgba(255,255,255,.85) 0%,
+    rgba(255,252,245,.7) 24%,
+    rgba(255,248,230,.45) 48%,
+    rgba(255,240,210,.18) 70%,
+    transparent 88%);
+  filter:blur(14px);
   pointer-events:none;
   z-index:0;
   animation:hSealHalo 5s ease-in-out infinite;
 }
 @keyframes hSealHalo{
-  0%,100%{transform:scale(1);opacity:.92}
-  50%   {transform:scale(1.05);opacity:1}
+  0%,100%{transform:scale(1);opacity:1}
+  50%   {transform:scale(1.06);opacity:.95}
 }
 .h-seal-disc{
   position:relative;z-index:1;
@@ -1879,15 +1883,6 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
     <span class="h-name">Stephanie</span>
     <span class="h-amp">&amp;</span>
     <span class="h-name">David</span>
-  </div>
-
-  <!-- Chip fecha glass -->
-  <div class="h-chip">
-    <span class="h-chip-line">Nos casamos</span>
-    <span class="h-chip-divider"></span>
-    <span class="h-chip-date">16 · Enero · 2027</span>
-    <span class="h-chip-divider"></span>
-    <span class="h-chip-line">Cuernavaca · Morelos</span>
   </div>
 
   <div class="h-scroll" id="hScroll">
