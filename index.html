@@ -2170,7 +2170,7 @@ section.has-sec-waves{padding-top:84px;padding-bottom:86px}
 
     <button type="button" onclick="sendRSVP()" class="btn btn-olive rsvp-submit-btn">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      Confirmar asistencia
+      <span id="rsvpBtnText">Confirmar asistencia</span>
     </button>
   </div>
 </section>
@@ -2646,25 +2646,58 @@ document.querySelectorAll('input[name="att"]').forEach(r => {
 const _urlParams = new URLSearchParams(location.search);
 const _para = _urlParams.get('para') || '';
 const _p = parseInt(_urlParams.get('pases')) || 1;
-const _pases = Math.min(5, Math.max(1, _p));
-(function(){
-  const numEl  = document.getElementById('rsvpPasesNum');
-  const lblEl  = document.getElementById('rsvpPasesLbl');
-  const wrap   = document.getElementById('rsvpGuestsWrap');
-  if (numEl) numEl.textContent = _pases;
-  if (lblEl) lblEl.textContent = _pases === 1 ? 'persona' : 'personas';
-  if (wrap) {
-    let html = '';
-    for (let i = 1; i <= _pases; i++) {
-      const placeholder = i === 1
-        ? 'Tu nombre completo'
-        : `Nombre del acompañante ${i}`;
-      const marginTop = i === 1 ? '0' : '10px';
-      const val = (i === 1 && _para) ? ` value="${_para.replace(/"/g,'&quot;')}"` : '';
-      html += `<input type="text" id="rsvpGuest${i}" class="rsvp-input" placeholder="${placeholder}" autocomplete="off" maxlength="60"${val} style="margin-top:${marginTop}">`;
-    }
-    wrap.innerHTML = html;
+let _pases = Math.min(5, Math.max(1, _p));
+
+/* Contrato estándar del panel de invitados (particiona por url_boda) */
+const PANEL_API = 'https://panel-invitados.vercel.app/api/confirmar';
+const RSVP_URL  = 'https://boda-stephanie-y-david.vercel.app';
+
+function renderGuests(pases, prefill) {
+  const numEl = document.getElementById('rsvpPasesNum');
+  const lblEl = document.getElementById('rsvpPasesLbl');
+  const wrap  = document.getElementById('rsvpGuestsWrap');
+  if (numEl) numEl.textContent = pases;
+  if (lblEl) lblEl.textContent = pases === 1 ? 'persona' : 'personas';
+  if (!wrap) return;
+  let html = '';
+  for (let i = 1; i <= pases; i++) {
+    const placeholder = i === 1
+      ? 'Tu nombre completo'
+      : `Nombre del acompañante ${i}`;
+    const marginTop = i === 1 ? '0' : '10px';
+    const pre = (prefill && prefill[i-1]) ? prefill[i-1] : (i === 1 ? _para : '');
+    const val = pre ? ` value="${String(pre).replace(/"/g,'&quot;')}"` : '';
+    html += `<input type="text" id="rsvpGuest${i}" class="rsvp-input" placeholder="${placeholder}" autocomplete="off" maxlength="60"${val} style="margin-top:${marginTop}">`;
   }
+  wrap.innerHTML = html;
+}
+
+renderGuests(_pases);
+
+/* Guard silencioso + prefill: botón bloqueado hasta que responda el panel */
+(function(){
+  if (!_para) return;
+  const btn    = document.querySelector('.rsvp-submit-btn');
+  const btnTxt = document.getElementById('rsvpBtnText');
+  if (btn) { btn.disabled = true; btn.style.opacity = '.5'; }
+  fetch(PANEL_API + '?nombre=' + encodeURIComponent(_para) + '&url_boda=' + encodeURIComponent(RSVP_URL))
+    .then(r => r.json())
+    .then(resp => {
+      const d = resp && resp.invitado;
+      if (d && typeof d.pases === 'number' && d.pases > 0 && d.pases <= 20) _pases = d.pases;
+      let prefill = null;
+      if (d && d.estado === 'confirmado' && Array.isArray(d.nombres_confirmados) && d.nombres_confirmados.length) {
+        prefill = d.nombres_confirmados;
+      }
+      renderGuests(_pases, prefill);
+      if (d && (d.estado === 'confirmado' || d.estado === 'declino') && btnTxt) {
+        btnTxt.textContent = 'Actualizar respuesta';
+      }
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    })
+    .catch(() => {
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    });
 })();
 
 async function sendRSVP() {
@@ -2677,23 +2710,26 @@ async function sendRSVP() {
     }
     guests.push(v);
   }
-  const btn = document.querySelector('.rsvp-submit-btn');
+  const btn    = document.querySelector('.rsvp-submit-btn');
+  const btnTxt = document.getElementById('rsvpBtnText');
   if (btn) { btn.disabled = true; btn.style.opacity = '.5'; }
   toast('Enviando confirmación…');
   try {
-    const res = await fetch('https://panel-invitados.vercel.app/api/confirmar', {
+    const res = await fetch(PANEL_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        slug: 'boda-stephanie-y-david',
-        nombre: guests[0],
-        acompanantes: guests.slice(1),
-        pases: _pases,
-        para: _para
+        nombre: _para || (guests[0] || 'Invitado'),
+        url_boda: RSVP_URL,
+        estado: 'confirmado',
+        pases_confirmados: guests.length,
+        nombres_confirmados: guests
       })
     });
     if (!res.ok) throw new Error('Error del servidor');
     toast('¡Confirmación enviada! Gracias 💫');
+    if (btnTxt) btnTxt.textContent = 'Actualizar respuesta';
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
   } catch(e) {
     toast('No se pudo enviar. Intenta de nuevo.');
     if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
@@ -2970,5 +3006,33 @@ function toast(msg) {
 })();
 </script>
 
+<script>
+/* ELYSIUM AUDIO UNLOCK v1 — la musica se estrena DENTRO del primer gesto real del invitado.
+   iOS/Chrome retiran el permiso del gesto a los pocos ms, asi que un play() que corre al
+   terminar el video del sobre llega tarde y es rechazado en silencio. */
+(function(){
+  if(window.__elyAudioUnlock) return; window.__elyAudioUnlock=1;
+  var done=false, tries=0;
+  function A(){ return document.querySelector('audio'); }
+  function unlock(){
+    if(done) return;
+    var a=A(); if(!a) return;
+    try{ if(a.preload==='none'){ a.preload='auto'; a.load(); } }catch(e){}
+    if(!a.paused){ done=true; return; }
+    var p;
+    try{ p=a.play(); }catch(e){ return; }
+    if(p && p.then){ p.then(function(){ done=true; }).catch(function(){}); }
+    else { done=true; }
+  }
+  ['pointerdown','touchstart','touchend','click','keydown'].forEach(function(ev){
+    document.addEventListener(ev, unlock, {capture:true, passive:true});
+  });
+  var iv=setInterval(function(){
+    var a=A();
+    if(done || (a && !a.paused)){ done=true; clearInterval(iv); return; }
+    if(++tries>120) clearInterval(iv);
+  },1000);
+})();
+</script>
 </body>
 </html>
